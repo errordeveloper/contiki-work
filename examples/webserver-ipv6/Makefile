@@ -31,10 +31,10 @@ else
 APPS=webserver
 
 all : $(CONTIKI_PROJECT)
-	@if (test -n "$(ELF_SIZE)");then $(ELF_SIZE) $(CONTIKI_PROJECT).$(TARGET);fi	
+	@if (test -n "$(ELF_SIZE)");then $(ELF_SIZE) $(CONTIKI_PROJECT).$(TARGET);fi
 endif
 
-UIP_CONF_IPV6=1
-DEFINES=WITH_UIP6
+#UIP_CONF_IPV6=1
+DEFINES=WITH_UIP4
 CONTIKI = ../..
 include $(CONTIKI)/Makefile.include

@@ -1,0 +1,34 @@
+
+
+GDB_COMMAND ?= cgdb -d $(GDB)
+
+# This is necessary on some systems and it will not break on other.
+SU_COMMAND ?= sudo
+SU_OPTIONS ?= env PATH="/sbin:/usr/sbin/:/usr/local/sbin/:$(PATH)"
+SU_EXECUTE ?= $(SU_COMMAND) $(SU_OPTIONS)
+
+
+TERM_TITLE ?= '(Contiki device - serial console)'
+TERM_OPTIONS ?= # +rv -sb
+TERM_COMMAND ?= urxvt
+
+TERM_EXECUTE ?= $(TERM_COMMAND) \
+                $(TERM_OPTIONS) -title $(TERM_TITLE) -e
+
+## If TUNSLIP_COMMAND is predefined then we don't need to make
+## the executable, hence it's installed on the system already!
+ifndef TUNSLIP_COMMAND
+  TUNSLIP_COMMAND = $(CONTIKI)/tools/tunslip6
+  REQUIRE_TUNSLIP = $(TUNSLIP_COMMAND)
+endif
+
+TUNSLIP_DEVNO ?= 0
+TUNSLIP_ADDRESS ?= aaaa::1/64
+## NOTE: You might need to use `readlink -e /dev/long-name` if
+## `tunslip6` segfaults, because it presumes short name length!
+TUNSLIP_CHARDEV ?= `readlink -e $(UDEV_UART)`
+TUNSLIP_OPTIONS ?= -L -s $(TUNSLIP_CHARDEV) -t tun$(TUNSLIP_DEVNO)
+
+TUNSLIP_EXECUTE ?= $(SU_EXECUTE) \
+                   $(TUNSLIP_COMMAND) \
+                   $(TUNSLIP_OPTIONS) $(TUNSLIP_ADDRESS)
