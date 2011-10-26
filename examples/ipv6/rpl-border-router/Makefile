@@ -12,7 +12,7 @@ CFLAGS += -DPROJECT_CONF_H=\"project-conf.h\"
 ## Linker optimizations
 SMALL = 1
 
-
+APPS += webbrowser
 PROJECT_SOURCEFILES += slip-bridge.c wget.c
 
 ## Simple built-in webserver is the default.
@@ -32,8 +32,6 @@ else ifneq ($(WITH_WEBSERVER), 0)
   APPS += $(WITH_WEBSERVER)
   CFLAGS += -DWEBSERVER=2
 endif
-
-APPS+=webbrowser
 
 ## Note /apps/webserver contains a 2500 byte style sheet which is a severe test
 ## of the slip connection. Large MSS together with low baud rates without flow

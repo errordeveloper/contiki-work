@@ -38,14 +38,12 @@
 
 #include "contiki-net.h"
 #include "webclient.h"
-//#include "cfs/cfs.h"
 #include "lib/petsciiconv.h"
 
 PROCESS(wget_process, "Wget");
 
 AUTOSTART_PROCESSES(&wget_process);
 
-static int file = -1;
 static char url[] = "http://google.com/";
 
 
@@ -141,34 +139,21 @@ start_get(void)
 static void
 app_quit(void)
 {
-  if(file != -1) {
-    //cfs_close(file);
-  }
   process_exit(&wget_process);
   LOADER_UNLOAD();
 }
 /*-----------------------------------------------------------------------------------*/
 PROCESS_THREAD(wget_process, ev, data)
 {
-  static char name[32];
 
   PROCESS_BEGIN();
 
   PROCESS_PAUSE();
 
   printf("\nWould ask for the URL ...");
-  //gets(url);
-  printf("\nbut the URL is given already as:%s", url);
-  //gets(name);
-  printf("");
-  file = 1; //cfs_open(name, CFS_WRITE);
-  if(file == -1) {
-    printf("Open error with '%s'\n", name);
-    app_quit();
-  } else {
-    petsciiconv_toascii(url, sizeof(url));
-    start_get();
-  }
+  printf("\nbut the URL is given already as:%s\n", url);
+  petsciiconv_toascii(url, sizeof(url));
+  start_get();
 
   while(1) {
 
@@ -240,17 +225,10 @@ void
 webclient_datahandler(char *data, u16_t len)
 {
   static unsigned long dload_bytes;
-  int ret;
 
   if(len > 0) {
     dload_bytes += len;
     printf("Downloading (%lu bytes)\n", dload_bytes);
-    if(file != -1) {
-      ret = 0; //cfs_write(file, data, len);
-      if(ret != len) {
-	printf("Wrote only %d bytes\n", ret);
-      }
-    }
   }
 
   if(data == NULL) {
