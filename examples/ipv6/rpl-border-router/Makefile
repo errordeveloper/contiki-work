@@ -13,7 +13,7 @@ CFLAGS += -DPROJECT_CONF_H=\"project-conf.h\"
 SMALL = 1
 
 
-PROJECT_SOURCEFILES += slip-bridge.c
+PROJECT_SOURCEFILES += slip-bridge.c wget.c
 
 ## Simple built-in webserver is the default.
 ## Override with make WITH_WEBSERVER=0 for no webserver.
@@ -23,7 +23,7 @@ PROJECT_SOURCEFILES += slip-bridge.c
 ##  WITH_WEBSERVER=raven-webserver for /platform/avr-raven/apps/raven-webserver/
 ## make clean before changing webservers!
 
-WITH_WEBSERVER ?= 1
+WITH_WEBSERVER ?= 0
 
 ifeq ($(WITH_WEBSERVER), 1)
   CFLAGS += -DWEBSERVER=1
@@ -32,6 +32,8 @@ else ifneq ($(WITH_WEBSERVER), 0)
   APPS += $(WITH_WEBSERVER)
   CFLAGS += -DWEBSERVER=2
 endif
+
+APPS+=webbrowser
 
 ## Note /apps/webserver contains a 2500 byte style sheet which is a severe test
 ## of the slip connection. Large MSS together with low baud rates without flow

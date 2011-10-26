@@ -36,7 +36,7 @@
 
 /**
  * \file
- *         Configuration for MC1322x hobby board based on 
+ *         Configuration for MC1322x hobby board based on
  *         Configuration for sample STK 501 Contiki kernel
  *
  * \author
@@ -70,9 +70,9 @@
 #define BRMOD 9999
 /*  230400 bps, INC=767, MOD=9999, 24Mhz 16x samp */
 /*  115200 bps, INC=767, MOD=9999, 24Mhz 8x samp */
-#define BRINC 767  
+#define BRINC 767
 /*  921600 bps, MOD=9999, 24Mhz 16x samp */
-//#define BRINC 3071 
+//#define BRINC 3071
 #define SAMP UCON_SAMP_8X
 //#define SAMP UCON_SAMP_16X
 
@@ -111,7 +111,7 @@ typedef unsigned long rtimer_clock_t;
 #define OUI 0xacde48     /* if IAB is defined then OUI = 0x0050C2 */
 #define IAB 0xA8C        /* IAB 0xA8C for use on Redwire products only */
 //#undef IAB               /* do not define an IAB if you are using a full OUI */
-//#define EXT_ID 0xdef123  /* lower 12-bits used if IAB is defined */ 
+//#define EXT_ID 0xdef123  /* lower 12-bits used if IAB is defined */
 #undef  EXT_ID           /* if an extention id is not defined then one will be generated randomly */
 
 #define FLASH_BLANK_ADDR /* if defined then the generated rime address will flashed */
@@ -119,7 +119,7 @@ typedef unsigned long rtimer_clock_t;
 #if WITH_UIP6
 /* Network setup for IPv6 */
 #define NETSTACK_CONF_NETWORK sicslowpan_driver
-#define NETSTACK_CONF_MAC     nullmac_driver 
+#define NETSTACK_CONF_MAC     nullmac_driver
 /*#define NETSTACK_CONF_RDC     contikimac_driver*/ /* contikimac for redbee hasn't been well tested */
 #define NETSTACK_CONF_RDC     nullrdc_driver
 #define NETSTACK_CONF_RADIO   contiki_maca_driver
@@ -185,7 +185,7 @@ typedef unsigned long rtimer_clock_t;
 #define UIP_CONF_LL_802154              1
 #define UIP_CONF_LLH_LEN                0
 
-#define UIP_CONF_ROUTER                 1  
+#define UIP_CONF_ROUTER                 1
 #define UIP_CONF_IPV6_RPL               1
 
 #define UIP_CONF_DS6_NBR_NBU     30
@@ -234,7 +234,7 @@ typedef unsigned long rtimer_clock_t;
 #define UIP_CONF_UDP_CONNS       12
 #define UIP_CONF_FWCACHE_SIZE    30
 #define UIP_CONF_BROADCAST       1
-#define UIP_ARCH_IPCHKSUM        1
+//#define UIP_ARCH_IPCHKSUM        1
 #define UIP_CONF_UDP             1
 #define UIP_CONF_UDP_CHECKSUMS   1
 #define UIP_CONF_PINGADDRCONF    0
