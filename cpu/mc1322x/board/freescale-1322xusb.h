@@ -28,13 +28,13 @@
  * SUCH DAMAGE.
  *
  * This file is part of libmc1322x: see http://mc1322x.devl.org
- * for details. 
+ * for details.
  *
  *
  */
 
-#ifndef BOARD_FREESCALE_NCB_H
-#define BOARD_FREESCALE_NCB_H
+#ifndef BOARD_FREESCALE_1322XUSB_H
+#define BOARD_FREESCALE_1322XUSB_H
 
 #define GPIO_LED_RED   GPIO_23
 #define GPIO_LED_GREEN GPIO_24
@@ -48,10 +48,12 @@
 /* see http://devl.org/pipermail/mc1322x/2009-December/000162.html */
 /* for details about how to make this measurment */
 
+/* TODO: check these values!
+ * for now copy of econotag */
 /* Coarse tune: add 4pf */
 #define CTUNE_4PF 1
 /* Coarse tune: add 0-15 pf */
-#define CTUNE 8
+#define CTUNE 11
 /* Fine tune: add FTUNE * 156fF (FTUNE is 4bits) */
 #define FTUNE 15
 
