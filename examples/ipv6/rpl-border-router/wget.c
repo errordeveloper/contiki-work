@@ -165,7 +165,7 @@ PROCESS_THREAD(wget_process, ev, data)
     } else if(ev == resolv_event_found) {
       /* Either found a hostname, or not. */
       if((char *)data != NULL &&
-	 resolv_lookup((char *)data) != NULL) {
+	resolv_lookup((char *)data) != NULL) {
 	start_get();
       } else {
 	printf("Host not found");

@@ -30,3 +30,5 @@ tools/cooja/apps/serial_socket/build/
 tools/cooja/apps/serial_socket/lib/
 tools/cooja/build/
 tools/cooja/dist/
+
+.*.sw?

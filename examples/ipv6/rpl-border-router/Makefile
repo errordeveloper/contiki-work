@@ -12,8 +12,8 @@ CFLAGS += -DPROJECT_CONF_H=\"project-conf.h\"
 ## Linker optimizations
 SMALL = 1
 
-APPS += webbrowser
-PROJECT_SOURCEFILES += slip-bridge.c wget.c
+#APPS += webbrowser
+PROJECT_SOURCEFILES += slip-bridge.c #wget.c
 
 ## Simple built-in webserver is the default.
 ## Override with make WITH_WEBSERVER=0 for no webserver.
@@ -23,7 +23,7 @@ PROJECT_SOURCEFILES += slip-bridge.c wget.c
 ##  WITH_WEBSERVER=raven-webserver for /platform/avr-raven/apps/raven-webserver/
 ## make clean before changing webservers!
 
-WITH_WEBSERVER ?= 0
+WITH_WEBSERVER ?= 1
 
 ifeq ($(WITH_WEBSERVER), 1)
   CFLAGS += -DWEBSERVER=1

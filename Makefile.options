@@ -12,14 +12,18 @@ TERM_TITLE ?= '(Contiki device - serial console)'
 TERM_OPTIONS ?= # +rv -sb
 TERM_COMMAND ?= urxvt
 
+
+## It would be really ugly to check whether the socket exists!
+# ifeq($(shell test -S ~/.rxvt-unicode-`hostname` && echo 1), '1')
+
 TERM_EXECUTE ?= $(TERM_COMMAND) \
                 $(TERM_OPTIONS) -title $(TERM_TITLE) -e
 
 ## If TUNSLIP_COMMAND is predefined then we don't need to make
 ## the executable, hence it's installed on the system already!
 ifndef TUNSLIP_COMMAND
-  TUNSLIP_COMMAND = $(CONTIKI)/tools/tunslip6
-  REQUIRE_TUNSLIP = $(TUNSLIP_COMMAND)
+  REQUIRE_TUNSLIP = $(CONTIKI)/tools/tunslip6
+  TUNSLIP_COMMAND = $(shell readlink -e $(REQUIRE_TUNSLIP))
 endif
 
 TUNSLIP_DEVNO ?= 0
