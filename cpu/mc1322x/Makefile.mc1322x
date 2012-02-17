@@ -120,21 +120,23 @@ symbols.c:
 
 TOOLS = $(CONTIKIMC1322X)/tools/
 
+PERL ?= /usr/bin/perl
+
 %.load: %_$(TARGET).bin
-	perl $(TOOLS)/mc1322x-load.pl -e -t $(UDEV_UART) \
+	$(PERL) $(TOOLS)/mc1322x-load.pl -e -t $(UDEV_UART) \
 		-f $<
 
 %.load-reset: %_$(TARGET).bin
-	perl $(TOOLS)/mc1322x-load.pl -e -t $(UDEV_UART) \
+	$(PERL) $(TOOLS)/mc1322x-load.pl -e -t $(UDEV_UART) \
 		-f $< \
 		-c 'bbmc -l $(TARGET) reset'
 
 %.load-print: %_$(TARGET).bin
-	perl $(TOOLS)/mc1322x-load.pl -t $(UDEV_UART) \
+	$(PERL) $(TOOLS)/mc1322x-load.pl -t $(UDEV_UART) \
 		-f $<
 
 %.load-reset-print: %_$(TARGET).bin
-	perl $(TOOLS)/mc1322x-load.pl -t $(UDEV_UART) \
+	$(PERL) $(TOOLS)/mc1322x-load.pl -t $(UDEV_UART) \
 		-f $< \
 		-c 'bbmc -l $(TARGET) reset'
 
