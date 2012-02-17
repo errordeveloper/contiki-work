@@ -1,3 +1,6 @@
 [submodule "projects"]
 	path = projects
 	url = git@github.com:/errordeveloper/contiki-projects.git
+[submodule "cpu/mc1322x/tools/openocd"]
+	path = cpu/mc1322x/tools/openocd
+	url = git://git.devl.org/git/malvira/openocd.git
