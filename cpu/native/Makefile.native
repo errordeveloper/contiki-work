@@ -1,6 +1,9 @@
 CONTIKI_CPU_DIRS = . net
 
-CONTIKI_SOURCEFILES += mtarch.c rtimer-arch.c elfloader-stub.c watchdog.c
+ifneq ($(TARGET),android)
+  CONTIKI_SOURCEFILES += mtarch.c
+endif
+CONTIKI_SOURCEFILES += rtimer-arch.c elfloader-stub.c watchdog.c
 
 ### Compiler definitions
 CC       ?= gcc
