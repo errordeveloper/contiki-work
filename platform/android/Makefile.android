@@ -1,0 +1,69 @@
+ifndef CONTIKI
+  $(error CONTIKI not defined! You must specify where CONTIKI resides!)
+endif
+
+## We trying to provide some guidance here, while also avoiding any
+## hardcoded/presumed toolchain versions and other sources of error
+## (for more information see: $(NDK)/docs/STANDALONE-TOOLCHAIN.html)
+ifndef NDK
+  $(error NDK not defined! You must specify where NDK resides!)
+else
+  $(info Will use Android NDK installed in `$(NDK)`.)
+  ifndef TOOLCHAIN
+    $(info Available toolchains: $(shell cd $(NDK)/toolchains/ && find . -type d -depth 1 | sed 's:./:\":' | sed 's:$$:\":'))
+    $(error TOOLCHAIN not defined! You myst specify one of the above)
+  else
+    TOOLCHAIN_PATH := $(NDK)/toolchains/$(TOOLCHAIN)/prebuilt
+  endif
+  ifndef DROIDUPLE
+    $(info Available API levels / architecture "droiduples": $(shell cd $(NDK)/platforms/ && find . -type d -depth 2 | sed 's:./:\":' | sed 's:$$:\":'))
+    $(error DROIDUPLE not defined! You must specify one of the above)
+  else
+    SYSROOT := $(NDK)/platforms/$(DROIDUPLE)/
+    CFLAGS += --sysroot=$(SYSROOT)
+  endif
+endif
+
+
+ifeq ($(HOST_OS),Linux)
+  TOOLCHAIN_HOST += linux-x86
+else ifeq ($(HOST_OS),Darwin)
+  TOOLCHAIN_HOST += darwin-x86
+  ## We are using host's version of ar(1), hence set this.
+  AROPTS = rc
+endif
+
+CC      := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-gcc)
+LD      := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-gcc)
+AS      := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-as)
+NM      := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-nm)
+OBJCOPY := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-objcopy)
+STRIP   := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-strip)
+
+ifdef UIP_CONF_IPV6
+CFLAGS += -DWITH_UIP6=1
+endif
+
+CONTIKI_TARGET_DIRS = . dev
+CONTIKI_TARGET_MAIN = ${addprefix $(OBJECTDIR)/,contiki-main.o}
+
+
+CONTIKI_TARGET_SOURCEFILES = contiki-main.c clock.c leds.c leds-arch.c \
+		button-sensor.c pir-sensor.c vib-sensor.c xmem.c \
+		sensors.c irq.c cfs-posix.c cfs-posix-dir.c
+
+CONTIKI_TARGET_SOURCEFILES += tapdev-drv.c
+ifndef UIP_CONF_IPV6
+CONTIKI_TARGET_SOURCEFILES += tapdev.c
+else
+CONTIKI_TARGET_SOURCEFILES += tapdev6.c
+endif
+
+CONTIKI_SOURCEFILES += $(CONTIKI_TARGET_SOURCEFILES)
+
+.SUFFIXES:
+
+### Define the CPU directory
+CONTIKI_CPU := $(CONTIKI)/cpu/native
+include $(CONTIKI_CPU)/Makefile.native
+$(info Hello, $(TARGET))
