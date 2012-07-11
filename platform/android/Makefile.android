@@ -21,6 +21,7 @@ else
   else
     SYSROOT := $(NDK)/platforms/$(DROIDUPLE)/
     CFLAGS += --sysroot=$(SYSROOT)
+    LDFLAGS += --sysroot=$(SYSROOT) -Wl,-Map=contiki-$(TARGET).map,-export-dynamic
   endif
 endif
 
@@ -37,6 +38,8 @@ CC      := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-gcc)
 LD      := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-gcc)
 AS      := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-as)
 NM      := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-nm)
+AR      := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-ar)
+RANLIB  := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-ranlib)
 OBJCOPY := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-objcopy)
 STRIP   := $(shell ls $(TOOLCHAIN_PATH)/$(TOOLCHAIN_HOST)/bin/*-strip)
 
