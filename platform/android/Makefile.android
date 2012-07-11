@@ -9,19 +9,24 @@ ifndef NDK
   $(error NDK not defined! You must specify where NDK resides!)
 else
   $(info Will use Android NDK installed in `$(NDK)`.)
+  PRETTIFY = sed 's:./:\":' | sed 's:$$:\":'
   ifndef TOOLCHAIN
-    $(info Available toolchains: $(shell cd $(NDK)/toolchains/ && find . -type d -depth 1 | sed 's:./:\":' | sed 's:$$:\":'))
+    $(info Available toolchains: \
+	    $(shell cd $(NDK)/toolchains/&& find . -type d -depth 1 |$(PRETTIFY)))
     $(error TOOLCHAIN not defined! You myst specify one of the above)
   else
     TOOLCHAIN_PATH := $(NDK)/toolchains/$(TOOLCHAIN)/prebuilt
   endif
   ifndef DROIDUPLE
-    $(info Available API levels / architecture "droiduples": $(shell cd $(NDK)/platforms/ && find . -type d -depth 2 | sed 's:./:\":' | sed 's:$$:\":'))
+    $(info Available API levels / architecture "droiduples": \
+	    $(shell cd $(NDK)/platforms/&& find . -type d -depth 2 |$(PRETTIFY)))
     $(error DROIDUPLE not defined! You must specify one of the above)
   else
     SYSROOT := $(NDK)/platforms/$(DROIDUPLE)/
     CFLAGS += --sysroot=$(SYSROOT)
-    LDFLAGS += --sysroot=$(SYSROOT) -Wl,-Map=contiki-$(TARGET).map,-export-dynamic
+    LDFLAGS += --sysroot=$(SYSROOT)
+    ## Ensure we get these, cause on Darwin they get lost
+    LDFLAGS += -Wl,-Map=contiki-$(TARGET).map,-export-dynamic
   endif
 endif
 
