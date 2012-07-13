@@ -2,9 +2,10 @@
 
 This is an experimental platform that is aimed to allow building _"native"_
 binaries which can run on Android targets, provided the user has root shell
-access on the target. You will quite likelly need a custom kernel or at least
-a checkout of the kernel tree which the device runs to cross-compile a module,
-if you are using a USB-serial devices.
+access on the target. You will also need a custom kernel or at least a
+checkout of the kernel tree which the device runs to cross-compile a module,
+because nor `CONFIG_TUN` neither `CONFIG_USB_SERIAL_FTDI_SIO` is likelly to
+be set in a typical Android kernel configuration.
 
 ## Examples
 
