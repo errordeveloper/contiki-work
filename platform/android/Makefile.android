@@ -72,4 +72,3 @@ CONTIKI_SOURCEFILES += $(CONTIKI_TARGET_SOURCEFILES)
 ### Define the CPU directory
 CONTIKI_CPU := $(CONTIKI)/cpu/native
 include $(CONTIKI_CPU)/Makefile.native
-$(info Hello, $(TARGET))
