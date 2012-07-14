@@ -155,7 +155,7 @@ tun_alloc(char *dev)
   struct ifreq ifr;
   int fd, err;
 
-  if( (fd = open("/dev/net/tun", O_RDWR)) < 0 ) {
+  if( (fd = open(LINUX_DEV_TUN_CTL, O_RDWR)) < 0 ) {
     return -1;
   }
 

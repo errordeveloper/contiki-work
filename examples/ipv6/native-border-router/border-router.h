@@ -56,4 +56,11 @@ int slip_init(void);
 int slip_set_fd(int maxfd, fd_set *rset, fd_set *wset);
 void slip_handle_fd(fd_set *rset, fd_set *wset);
 
+#ifdef linux
+#ifndef LINUX_DEV_TUN_CTL
+#define LINUX_DEV_TUN_CTL "/dev/net/tun"
+#else
+#endif /* LINUX_DEV_TUN_CTL */
+#endif /* linux */
+
 #endif /* __BORDER_ROUTER_H__ */
