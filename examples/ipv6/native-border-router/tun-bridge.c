@@ -104,7 +104,7 @@ cleanup(void)
 {
   ssystem("ifconfig %s down", slip_config_tundev);
 #ifndef linux
-  ssystem("sysctl -w net.ipv6.conf.all.forwarding=1");
+  ssystem("sysctl -w net.ipv6.conf.all.forwarding=0");
 #endif
   ssystem("netstat -nr"
 	  " | awk '{ if ($2 == \"%s\") print \"route delete -net \"$1; }'"
@@ -127,6 +127,7 @@ ifconf(const char *tundev, const char *ipaddr)
 #ifdef linux
   ssystem("ifconfig %s inet `hostname` up", tundev);
   ssystem("ifconfig %s add %s", tundev, ipaddr);
+  ssystem("sysctl -w net.ipv6.conf.all.forwarding=1");
 #elif defined(__APPLE__)
   ssystem("ifconfig %s inet6 %s up", tundev, ipaddr);
   ssystem("sysctl -w net.inet.ip.forwarding=1");
