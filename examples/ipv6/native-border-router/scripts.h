@@ -73,6 +73,8 @@ inline void tunconf(void)
 #  endif
 #elif defined(__APPLE__)
     DARWIN_TUNCONF_SCRIPT(
+#elif defined(CUSTOM_TUNCONF_SCRIPT)
+    CUSTOM_TUNCONF_SCRIPT(
 #endif
       slip_config_tundev, slip_config_ipaddr, HOSTIP));
 }
@@ -88,6 +90,8 @@ inline void tundown(void)
 #  endif
 #elif defined(__APPLE__)
     DARWIN_TUNDOWN_SCRIPT(
+#elif defined(CUSTOM_TUNDOWN_SCRIPT)
+    CUSTOM_TUNDOWN_SCRIPT(
 #endif
       slip_config_tundev));
 }
