@@ -67,7 +67,7 @@ inline void tunconf(void)
 {
   ssystem(
 #ifdef linux
-#  if defined(LINUX_IPROUTE2) || LINUX_IPROUTE2
+#  if defined(LINUX_IPROUTE2) && LINUX_IPROUTE2
     LINUX_IPROUTE2_TUNCONF_SCRIPT(
 #  else
     LINUX_LEGACY_TUNCONF_SCRIPT(
@@ -82,7 +82,7 @@ inline void tundown(void)
 {
   ssystem(
 #ifdef linux
-#  if defined(LINUX_IPROUTE2) || LINUX_IPROUTE2
+#  if defined(LINUX_IPROUTE2) && LINUX_IPROUTE2
     LINUX_IPROUTE2_TUNDOWN_SCRIPT(
 #  else
     LINUX_LEGACY_TUNDOWN_SCRIPT(
