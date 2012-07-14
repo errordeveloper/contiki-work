@@ -39,6 +39,11 @@
   "  && sysctl -w net.inet6.ip6.forwarding=0 \\\n" \
   , d
 
+/* TODO:
+ * - add `busybox` support
+ * - add option to disable `sysctl`
+*/
+
 /*---------------------------------------------------------------------------*/
 inline int ssystem(const char *fmt, ...)
      __attribute__((__format__ (__printf__, 1, 2)));
