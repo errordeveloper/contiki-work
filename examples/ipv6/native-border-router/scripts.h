@@ -53,7 +53,7 @@ ssystem(const char *fmt, ...) __attribute__((__format__ (__printf__, 1, 2)));
 inline int
 ssystem(const char *fmt, ...)
 {
-  char cmd[128];
+  char cmd[1024];
   va_list ap;
   va_start(ap, fmt);
   vsnprintf(cmd, sizeof(cmd), fmt, ap);
