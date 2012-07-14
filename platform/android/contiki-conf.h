@@ -172,6 +172,8 @@ typedef unsigned long clock_time_t;
 
 #define LOG_CONF_ENABLED 1
 
+#define LINUX_DEV_TUN_CTL "/dev/tun"
+
 /* Not part of C99 but actually present */
 int strcasecmp(const char*, const char*);
 
