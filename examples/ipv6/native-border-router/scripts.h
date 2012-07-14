@@ -6,13 +6,13 @@
   "ip link set %s up \\\n" \
   "  && ip addr add %s dev %s \\\n" \
   "  && ip addr add %s dev %s \\\n" \
-  "  && sysctl -w net.ipv6.conf.all.forwarding=1 \\\n" \
+  "  && if [[ $CONTIKI_BORDER_ROUTER_TOGGLE_FORWARDING == 1 ]]; then sysctl -w net.ipv6.conf.all.forwarding=1; fi \\\n" \
   "  && ip addr show dev %s\n" \
   , d, h, d, a, d, d
 
 #define LINUX_IPROUTE2_TUNDOWN_SCRIPT(d) \
   "ip link set %s down \\\n" \
-  "  && sysctl -w net.ipv6.conf.all.forwarding=0 \\\n" \
+  "  && if [[ $CONTIKI_BORDER_ROUTER_TOGGLE_FORWARDING == 1 ]]; then sysctl -w net.ipv6.conf.all.forwarding=0; fi \\\n" \
   , d
 
 #define LINUX_LEGACY_TUNCONF_SCRIPT(d, a, h) \
@@ -41,7 +41,6 @@
 
 /* TODO:
  * - add `busybox` support
- * - add option to disable `sysctl`
 */
 
 /*---------------------------------------------------------------------------*/

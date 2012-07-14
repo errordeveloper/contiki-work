@@ -82,7 +82,7 @@ slip_config_handle_arguments(int argc, char **argv)
 
   prog = argv[0];
 
-  while((c = getopt(argc, argv, "B:H:D:Lhs:t:v::d::a:p")) != EOO) {
+  while((c = getopt(argc, argv, "B:H:D:Lhs:t:v::d::a:p:S")) != EOO) {
     switch(c) {
     case 'B':
       baudrate = atoi(optarg);
@@ -130,6 +130,10 @@ slip_config_handle_arguments(int argc, char **argv)
       if(optarg) slip_config_verbose = atoi(optarg);
       break;
 
+    case 'S':
+      setenv("CONTIKI_BORDER_ROUTER_TOGGLE_FORWARDING", "0", 1);
+      break;
+
     case '?':
     case 'h':
     default:
@@ -143,6 +147,8 @@ fprintf(stderr," -B baudrate    9600,19200,38400,57600,115200 (default 115200)\n
 #endif
 fprintf(stderr," -H             Hardware CTS/RTS flow control (default disabled)\n");
 fprintf(stderr," -L             Log output format (adds time stamps)\n");
+fprintf(stderr," -S             Disable sysctl toggling in up/down script\n");
+fprintf(stderr,"                (overrides $CONTIKI_BORDER_ROUTER_TOGGLE_FORWARDING)\n");
 fprintf(stderr," -s siodev      Serial device (default /dev/ttyUSB0)\n");
 fprintf(stderr," -a host        Connect via TCP to server at <host>\n");
 fprintf(stderr," -p port        Connect via TCP to server at <host>:<port>\n");
