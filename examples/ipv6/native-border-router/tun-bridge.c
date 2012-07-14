@@ -65,8 +65,12 @@
 #include "cmd.h"
 #include "border-router.h"
 
+
 extern const char *slip_config_ipaddr;
 extern char slip_config_tundev[32];
+
+#include "scripts.h"
+
 extern uint16_t slip_config_basedelay;
 
 #ifndef __CYGWIN__
@@ -80,40 +84,6 @@ static const struct select_callback tun_select_callback = {
 };
 #endif /* __CYGWIN__ */
 
-int ssystem(const char *fmt, ...)
-     __attribute__((__format__ (__printf__, 1, 2)));
-int
-ssystem(const char *fmt, ...) __attribute__((__format__ (__printf__, 1, 2)));
-
-int
-ssystem(const char *fmt, ...)
-{
-  char cmd[128];
-  va_list ap;
-  va_start(ap, fmt);
-  vsnprintf(cmd, sizeof(cmd), fmt, ap);
-  va_end(ap);
-  printf("%s\n", cmd);
-  fflush(stdout);
-  return system(cmd);
-}
-
-/*---------------------------------------------------------------------------*/
-void
-cleanup(void)
-{
-  ssystem("ifconfig %s down", slip_config_tundev);
-#ifndef linux
-  ssystem("sysctl -w net.ipv6.conf.all.forwarding=0");
-#elif defined(__APPLE__)
-  ssystem("sysctl -w net.inet6.ip6.forwarding=0");
-#endif
-  ssystem("netstat -nr"
-	  " | awk '{ if ($2 == \"%s\") print \"route delete -net \"$1; }'"
-	  " | sh",
-	  slip_config_tundev);
-}
-
 /*---------------------------------------------------------------------------*/
 void
 sigcleanup(int signo)
@@ -122,22 +92,6 @@ sigcleanup(int signo)
   exit(0);			/* exit(0) will call cleanup() */
 }
 
-/*---------------------------------------------------------------------------*/
-void
-ifconf(const char *tundev, const char *ipaddr)
-{
-#ifdef linux
-  ssystem("ifconfig %s inet `hostname` up", tundev);
-  ssystem("ifconfig %s add %s", tundev, ipaddr);
-  ssystem("sysctl -w net.ipv6.conf.all.forwarding=1");
-#elif defined(__APPLE__)
-  ssystem("ifconfig %s inet6 %s up", tundev, ipaddr);
-  ssystem("sysctl -w net.inet6.ip6.forwarding=1");
-#endif
-
-  /* Print the configuration to the console. */
-  ssystem("ifconfig %s\n", tundev);
-}
 /*---------------------------------------------------------------------------*/
 int
 devopen(const char *dev, int flags)
@@ -214,11 +168,11 @@ tun_init()
   fprintf(stderr, "opened %s device ``/dev/%s''\n",
           "tun", slip_config_tundev);
 
-  atexit(cleanup);
+  atexit(tundown);
   signal(SIGHUP, sigcleanup);
   signal(SIGTERM, sigcleanup);
   signal(SIGINT, sigcleanup);
-  ifconf(slip_config_tundev, slip_config_ipaddr);
+  tunconf();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -307,5 +261,4 @@ handle_fd(fd_set *rset, fd_set *wset)
   }
 }
 #endif /*  __CYGWIN_ */
-
 /*---------------------------------------------------------------------------*/
