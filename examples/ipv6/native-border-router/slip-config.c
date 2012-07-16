@@ -57,6 +57,15 @@ const char *slip_config_port = NULL;
 char slip_config_tundev[32] = { "" };
 uint16_t slip_config_basedelay = 0;
 
+#ifndef DEFAULT_TUNCONF_SCRIPT
+#define DEFAULT_TUNCONF_SCRIPT "scripts/tun-conf.sh"
+#endif
+#ifndef DEFAULT_TUNDOWN_SCRIPT
+#define DEFAULT_TUNDOWN_SCRIPT "scripts/tun-down.sh"
+#endif
+const char *slip_config_tunconf_script = NULL;
+const char *slip_config_tundown_script = NULL;
+
 #ifndef BAUDRATE
 #define BAUDRATE B115200
 #endif
@@ -82,7 +91,7 @@ slip_config_handle_arguments(int argc, char **argv)
 
   prog = argv[0];
 
-  while((c = getopt(argc, argv, "B:H:D:Lhs:t:v::d::a:p")) != EOO) {
+  while((c = getopt(argc, argv, "B:H:D:Lhs:t:v::d::a:p:U:D:")) != EOO) {
     switch(c) {
     case 'B':
       baudrate = atoi(optarg);
@@ -120,6 +129,14 @@ slip_config_handle_arguments(int argc, char **argv)
       slip_config_port = optarg;
       break;
 
+    case 'U':
+      slip_config_tunconf_script = optarg;
+      break;
+
+    case 'D':
+      slip_config_tundown_script = optarg;
+      break;
+
     case 'd':
       slip_config_basedelay = 10;
       if(optarg) slip_config_basedelay = atoi(optarg);
@@ -147,6 +164,10 @@ fprintf(stderr," -s siodev      Serial device (default /dev/ttyUSB0)\n");
 fprintf(stderr," -a host        Connect via TCP to server at <host>\n");
 fprintf(stderr," -p port        Connect via TCP to server at <host>:<port>\n");
 fprintf(stderr," -t tundev      Name of interface (default tun0)\n");
+fprintf(stderr," -U tunconf.sh  Shell script to configure the interface\n");
+fprintf(stderr,"                (default `%s`).\n", DEFAULT_TUNCONF_SCRIPT);
+fprintf(stderr," -D tundown.sh  Shell script to take down the interface\n");
+fprintf(stderr,"                (default `%s`).\n", DEFAULT_TUNDOWN_SCRIPT);
 fprintf(stderr," -v[level]      Verbosity level\n");
 fprintf(stderr,"    -v0         No messages\n");
 fprintf(stderr,"    -v1         Encapsulated SLIP debug messages (default)\n");
@@ -166,7 +187,7 @@ exit(1);
   argv += optind - 1;
 
   if(argc != 2 && argc != 3) {
-    err(1, "usage: %s [-B baudrate] [-H] [-L] [-s siodev] [-t tundev] [-T] [-v verbosity] [-d delay] [-a serveraddress] [-p serverport] ipaddress", prog);
+    err(1, "usage: %s [-B baudrate] [-H] [-L] [-s siodev] [-t tundev] [-T] [-v verbosity] [-d delay] [-a serveraddress] [-p serverport] [-U tunconf.sh] [-D tunconf.sh] ipaddress", prog);
   }
   slip_config_ipaddr = argv[1];
 
@@ -202,6 +223,12 @@ exit(1);
     /* Use default. */
     strcpy(slip_config_tundev, "tun0");
   }
+  if(slip_config_tunconf_script == NULL || slip_config_tundown_script == NULL) {
+    slip_config_tunconf_script = DEFAULT_TUNCONF_SCRIPT;
+    slip_config_tundown_script = DEFAULT_TUNDOWN_SCRIPT;
+  }
+  setenv("SLIP_CONFIG_IPADDR", slip_config_ipaddr, 1);
+  setenv("SLIP_CONFIG_TUNDEV", slip_config_tundev, 1);
   return 1;
 }
 /*---------------------------------------------------------------------------*/

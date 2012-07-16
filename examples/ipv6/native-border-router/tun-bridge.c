@@ -68,6 +68,8 @@
 extern const char *slip_config_ipaddr;
 extern char slip_config_tundev[32];
 extern uint16_t slip_config_basedelay;
+extern const char *slip_config_tundown_script;
+extern const char *slip_config_tunconf_script;
 
 #ifndef __CYGWIN__
 static int tunfd;
@@ -99,19 +101,17 @@ ssystem(const char *fmt, ...)
 }
 
 /*---------------------------------------------------------------------------*/
-void
-cleanup(void)
+inline void
+tunconf(void)
 {
-  ssystem("ifconfig %s down", slip_config_tundev);
-#ifndef linux
-  ssystem("sysctl -w net.ipv6.conf.all.forwarding=0");
-#elif defined(__APPLE__)
-  ssystem("sysctl -w net.inet6.ip6.forwarding=0");
-#endif
-  ssystem("netstat -nr"
-	  " | awk '{ if ($2 == \"%s\") print \"route delete -net \"$1; }'"
-	  " | sh",
-	  slip_config_tundev);
+  ssystem("source %s", slip_config_tunconf_script);
+}
+
+/*---------------------------------------------------------------------------*/
+inline void
+tundown(void)
+{
+  ssystem("source %s", slip_config_tundown_script);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -122,22 +122,6 @@ sigcleanup(int signo)
   exit(0);			/* exit(0) will call cleanup() */
 }
 
-/*---------------------------------------------------------------------------*/
-void
-ifconf(const char *tundev, const char *ipaddr)
-{
-#ifdef linux
-  ssystem("ifconfig %s inet `hostname` up", tundev);
-  ssystem("ifconfig %s add %s", tundev, ipaddr);
-  ssystem("sysctl -w net.ipv6.conf.all.forwarding=1");
-#elif defined(__APPLE__)
-  ssystem("ifconfig %s inet6 %s up", tundev, ipaddr);
-  ssystem("sysctl -w net.inet6.ip6.forwarding=1");
-#endif
-
-  /* Print the configuration to the console. */
-  ssystem("ifconfig %s\n", tundev);
-}
 /*---------------------------------------------------------------------------*/
 int
 devopen(const char *dev, int flags)
@@ -214,11 +198,11 @@ tun_init()
   fprintf(stderr, "opened %s device ``/dev/%s''\n",
           "tun", slip_config_tundev);
 
-  atexit(cleanup);
+  atexit(tundown);
   signal(SIGHUP, sigcleanup);
   signal(SIGTERM, sigcleanup);
   signal(SIGINT, sigcleanup);
-  ifconf(slip_config_tundev, slip_config_ipaddr);
+  tunconf();
 }
 
 /*---------------------------------------------------------------------------*/
