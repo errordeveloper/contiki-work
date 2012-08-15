@@ -1,0 +1,38 @@
+## Makefile.CI
+#
+# This is for use on [Travis CI](http://travis-ci.org), which is
+# a free distributed continuous integration service with unique
+# set of features:
+# * uses clean VMs for every build
+# * integrates with GitHub
+# * features great UI (hence colours and unicode characters)
+# * it is open source and free for open source
+
+JOBS ?= 2
+TAIL ?= tail -n 15
+
+EXAMPLES_ALL = hello-world
+
+EXAMPLES_native = ipv6/native-border-router
+
+CT := \033[0;0m
+
+ifdef BOXED_SIGNS
+  SKIP_SIGN := ☐
+  FAIL_SIGN := ☒
+  PASS_SIGN := ☑
+else
+  SKIP_SIGN := ✈
+  FAIL_SIGN := ✘
+  PASS_SIGN := ✔
+endif
+
+SKIP  = (echo "\033[1;36m  $(SKIP_SIGN) ➝ ❨ $$e ⊈ $@ ❩$(CT)")
+FAIL  = (echo "\033[1;35m  $(FAIL_SIGN) ➝ ❨ $$e ∉ $@ ❩$(CT)"; $(TAIL) /tmp/$$ID.log)
+PASS  = (echo "\033[1;32m  $(PASS_SIGN) ➝ ❨ $$e ∈ $@ ❩$(CT)")
+
+THIS  = ID=`echo $@_$$e | openssl sha1`; $(MAKE) -C examples/$$e TARGET=$@ > /tmp/$$ID.log 2>&1
+
+%:
+	@echo "\033[1;37m ➠ ❨$@❩ $(CT)"
+	@for e in $(EXAMPLES_ALL) $(EXAMPLES_$@); do $(THIS) && $(PASS) || $(FAIL); done
