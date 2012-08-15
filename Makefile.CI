@@ -40,11 +40,12 @@ else
 endif
 
 SKIP  = (echo "\033[1;36m  $(SKIP_SIGN) ➝ ❨ $$e ⊈ $@ ❩$(CT)")
-FAIL  = (echo "\033[1;35m  $(FAIL_SIGN) ➝ ❨ $$e ∉ $@ ❩$(CT)"; $(TAIL) /tmp/$$ID.log)
+FAIL  = (echo "\033[1;35m  $(FAIL_SIGN) ➝ ❨ $$e ∉ $@ ❩$(CT)"; $(TAIL) $(LOG))
 PASS  = (echo "\033[1;32m  $(PASS_SIGN) ➝ ❨ $$e ∈ $@ ❩$(CT)")
 
-THIS  = ID=`echo $@_$$e | openssl sha1`; $(MAKE) -C examples/$$e TARGET=$@ > /tmp/$$ID.log 2>&1
+THIS = $(MAKE) -C examples/$$e TARGET=$@ > $(LOG) 2>&1
 MINE = $(EXAMPLES_ALL) $(EXAMPLES_$(subst -,_,$@))
+LOG  = /tmp/$@_`echo $$e | sed 's:/:_:g'`.log
 
 %:
 	@echo "\033[1;37m ➠ ❨$@❩ $(CT)"
