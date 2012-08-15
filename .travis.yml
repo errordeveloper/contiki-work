@@ -2,6 +2,7 @@ language: c # NOTE: this will set CC=gcc which might cause trouble
 branches:
   only:
     - travis
+    - travis_testme
 before_script:
   ## Install toolchain for mc1233x in care-free way
   - "curl -s \
