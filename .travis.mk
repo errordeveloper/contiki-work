@@ -43,8 +43,13 @@ SKIP  = (echo "\033[1;36m  $(SKIP_SIGN) ➝ ❨ $$e ⊈ $@ ❩$(CT)")
 FAIL  = (echo "\033[1;35m  $(FAIL_SIGN) ➝ ❨ $$e ∉ $@ ❩$(CT)"; $(TAIL) $(LOG))
 PASS  = (echo "\033[1;32m  $(PASS_SIGN) ➝ ❨ $$e ∈ $@ ❩$(CT)")
 
+ifeq ($(COOJA_TESTS),true)
+THIS = java -mx512m -jar tools/cooja/dist/cooja.jar -nogui=$$e > $(LOG) 2>&1
+MINE = tools/cooja/contiki_tests/*.csc
+else
 THIS = $(MAKE) -C examples/$$e TARGET=$@ > $(LOG) 2>&1
 MINE = $(EXAMPLES_ALL) $(EXAMPLES_$(subst -,_,$@))
+endif
 LOG  = /tmp/$@_`echo $$e | sed 's:/:_:g'`.log
 
 %:
