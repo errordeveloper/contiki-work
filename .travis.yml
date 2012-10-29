@@ -12,7 +12,7 @@ before_script:
   - "[ $COOJA_TESTS = true ] && ant -q -f tools/cooja/build.xml jar || true"
 
 script:
-  - "make -f .travis.mk $MAKE_TARGETS"
+  - "make -f .travis.mk $MAKE_TARGETS; echo 'Summary:'; cat results | sort | uniq -c; grep -v -q 'fail' results"
 
 env:
   - MAKE_TARGETS='cooja' COOJA_TESTS=true TAIL=cat

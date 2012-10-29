@@ -39,9 +39,9 @@ else
   PASS_SIGN := ✔
 endif
 
-SKIP  = (echo "\033[1;36m  $(SKIP_SIGN) ➝ ❨ $$e ⊈ $@ ❩$(CT)")
-FAIL  = (echo "\033[1;35m  $(FAIL_SIGN) ➝ ❨ $$e ∉ $@ ❩$(CT)"; $(TAIL) $(LOG))
-PASS  = (echo "\033[1;32m  $(PASS_SIGN) ➝ ❨ $$e ∈ $@ ❩$(CT)")
+SKIP  = (echo "\033[1;36m  $(SKIP_SIGN) ➝ ❨ $$e ⊈ $@ ❩$(CT)"; echo skip >> results)
+FAIL  = (echo "\033[1;35m  $(FAIL_SIGN) ➝ ❨ $$e ∉ $@ ❩$(CT)"; $(TAIL) $(LOG); echo fail >> results)
+PASS  = (echo "\033[1;32m  $(PASS_SIGN) ➝ ❨ $$e ∈ $@ ❩$(CT)"; echo pass >> results)
 
 ifeq ($(COOJA_TESTS),true)
 THIS = java -mx512m -jar tools/cooja/dist/cooja.jar -nogui=$$e > $(LOG) 2>&1
@@ -54,4 +54,4 @@ LOG  = /tmp/$@_`echo $$e | sed 's:/:_:g'`.log
 
 %:
 	@echo "\033[1;37m ➠ ❨$@❩ $(CT)"
-	@for e in $(MINE); do $(THIS) && $(PASS) || $(FAIL); done
+	@for e in $(MINE); do $(THIS) && $(PASS) || $(FAIL); done;
