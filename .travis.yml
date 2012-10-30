@@ -10,7 +10,12 @@ before_script:
   - "sudo apt-get update && sudo apt-get install gcc-msp430 || true"
 
 script:
-  - "make -f .travis.mk $MAKE_TARGETS; echo 'Summary:'; cat results | sort | uniq -c; grep -v -q 'fail' results"
+  - "make -f .travis.mk $MAKE_TARGETS"
+
+after_script:
+  - "echo 'Summary:'; cat results | sort | uniq -c"
+  - "grep -v -q 'fail' results"
+
 
 env:
   - BUILD_TYPE='cooja' MAKE_TARGETS='cooja' TAIL=cat
