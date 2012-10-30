@@ -4,6 +4,7 @@ before_script:
   - "[ $BUILD_TYPE = multi ] && curl -s \
        https://sourcery.mentor.com/public/gnu_toolchain/arm-none-eabi/arm-2008q3-66-arm-none-eabi-i686-pc-linux-gnu.tar.bz2 \
          | tar xjf - -C /tmp/ && sudo cp -f -r /tmp/arm-2008q3/* /usr/ && rm -rf /tmp/arm-2008q3 && arm-none-eabi-gcc --version"
+  - "[ $BUILD_TYPE = multi ] && sudo apt-get-update && sudo apt-get install gcc-msp430"
   ## Compile cooja.jar when we need it. This needs to exit with 0, otherwise Travis will complain that it failed.
   - "[ $BUILD_TYPE = cooja ] && ant -q -f tools/cooja/build.xml jar || true"
 
