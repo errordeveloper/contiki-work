@@ -7,7 +7,7 @@ before_script:
   ## Compile cooja.jar when we need it. This needs to exit with 0, otherwise Travis will complain that it failed.
   - "[ $BUILD_TYPE = cooja ] && ant -q -f tools/cooja/build.xml jar || true"
   ## Both build types require msp430 toolchain
-  - "sudo apt-get update && sudo apt-get install gcc-msp430 || true"
+  - "sudo apt-get -qq update && sudo apt-get -qq install gcc-msp430 || true"
 
 script:
   - "make -f .travis.mk $MAKE_TARGETS"
