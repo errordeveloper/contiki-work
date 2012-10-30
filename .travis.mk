@@ -44,7 +44,7 @@ FAIL  = (echo "\033[1;35m  $(FAIL_SIGN) ➝ ❨ $$e ∉ $@ ❩$(CT)"; $(TAIL) $(
 PASS  = (echo "\033[1;32m  $(PASS_SIGN) ➝ ❨ $$e ∈ $@ ❩$(CT)"; echo pass >> results)
 
 ifeq ($(BUILD_TYPE),cooja)
-THIS = java -mx512m -jar tools/cooja/dist/cooja.jar -nogui=$$e > $(LOG) 2>&1
+THIS = env CONTIKI=$(PWD) java -mx512m -jar tools/cooja/dist/cooja.jar -nogui=$$e > $(LOG) 2>&1
 MINE = tools/cooja/contiki_tests/*.csc
 endif
 ifeq ($(BUILD_TYPE),multi)
